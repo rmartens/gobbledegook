@@ -89,6 +89,7 @@ static GDBusObjectManager *pBluezObjectManager = nullptr;
 static GDBusObject *pBluezAdapterObject = nullptr;
 static GDBusObject *pBluezDeviceObject = nullptr;
 static GDBusProxy *pBluezGattManagerProxy = nullptr;
+static GDBusProxy *pBluezLEAdvertisingManagerProxy = nullptr;
 static GDBusProxy *pBluezAdapterInterfaceProxy = nullptr;
 static GDBusProxy *pBluezDeviceInterfaceProxy = nullptr;
 static GDBusProxy *pBluezAdapterPropertiesInterfaceProxy = nullptr;
@@ -822,6 +823,13 @@ void findAdapterInterface()
 			Logger::warn(SSTR << "Failed to get adapter properties proxy for interface 'org.freedesktop.DBus.Properties'");
 			continue;
 		}
+
+        pBluezLEAdvertisingManagerProxy = reinterpret_cast<GDBusProxy *>(g_dbus_object_get_interface(pBluezAdapterObject, "org.bluez.LEAdvertisingManager1"));
+        if (nullptr == pBluezLEAdvertisingManagerProxy)
+        {
+            Logger::warn(SSTR << "Failed to get adapter properties proxy for interface 'org.bluez.LEAdvertisingManager1'");
+            continue;
+        }
 
 		// Finally, save off the interface name, we're done!
 		bluezGattManagerInterfaceName = g_dbus_proxy_get_object_path(pBluezGattManagerProxy);
